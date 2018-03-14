@@ -2,7 +2,7 @@
 
 Name:           eucalyptus-imaging-worker
 Version:        0.2.2
-Release:        0%{?build_id:.%build_id}%{?dist}
+Release:        1%{?build_id:.%build_id}%{?dist}
 Summary:        Configuration tool for the Eucalyptus Imaging Service
 
 Group:          Applications/System
