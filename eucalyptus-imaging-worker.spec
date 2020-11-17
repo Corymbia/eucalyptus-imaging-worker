@@ -1,19 +1,20 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
 Name:           eucalyptus-imaging-worker
-Version:        0.2.2
+Version:        0.2.3
 Release:        1%{?build_id:.%build_id}%{?dist}
 Summary:        Configuration tool for the Eucalyptus Imaging Service
 
 Group:          Applications/System
 License:        GPLv3
-URL:            http://www.eucalyptus.com
+URL:            https://eucalyptus.cloud/
 Source0:        %{tarball_basedir}.tar.xz
 
 BuildArch:      noarch
 
 BuildRequires:  python%{?__python_ver}-devel
 BuildRequires:  python%{?__python_ver}-setuptools
+BuildRequires:  systemd
 
 Requires:       eucalyptus-imaging-toolkit
 Requires:       python%{?__python_ver}
@@ -60,6 +61,9 @@ install -m 6700 -d $RPM_BUILD_ROOT/%{_var}/{run,lib,log}/%{name}
 install -p -m 0750 -D scripts/imaging-worker.cron $RPM_BUILD_ROOT%{_sysconfdir}/cron.d/imaging-worker
 chmod 0640 $RPM_BUILD_ROOT%{_sysconfdir}/cron.d/imaging-worker
 
+mkdir -p $RPM_BUILD_ROOT/%{_tmpfilesdir}
+install -p -m 644 scripts/imaging-worker-tmpfiles.conf $RPM_BUILD_ROOT/%{_tmpfilesdir}/%{name}.conf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -91,6 +95,7 @@ fi
 %{_sysconfdir}/sudoers.d/imaging-worker
 %{_initddir}/%{name}
 %{_libexecdir}/%{name}
+%{_tmpfilesdir}/%{name}.conf
 %config(noreplace) %{_sysconfdir}/cron.d/imaging-worker
 
 %defattr(-,imaging-worker,imaging-worker,-)
@@ -101,6 +106,9 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}/boto.cfg
 
 %changelog
+* Tue Nov 17 2020 Steve Jones <steve.jones@appscale.com> - 0.2.3
+- Added tmpfiles.d configuration for service
+
 * Fri Jul 22 2016 Garrett Holmstrom <gholms@hpe.com> - 0.2.2
 - Version bump (0.2.2)
 
