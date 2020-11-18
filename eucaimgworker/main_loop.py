@@ -109,9 +109,9 @@ def start_worker():
         logger.error('failed to load floppy driver')
     try:
         res = get_block_devices()
-        if len(res) != 2:
+        if len(res) > 2:
             logger.error(
-                "Found %d block device(s). Imaging VM (re)started in a very small type or with volume(s) attached" % len(
+                "Found %d block device(s). Imaging VM (re)started with volume(s) attached?" % len(
                     res))
             sys.exit(1)
         res.sort(reverse=True)
