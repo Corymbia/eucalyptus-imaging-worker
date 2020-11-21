@@ -116,7 +116,12 @@ def start_worker():
             sys.exit(1)
         res.sort(reverse=True)
         last_dev = res[0]
-        if run('ls -la %s' % last_dev) != 0 or run('ls -la /mnt') != 0:
+        if '/dev/vda' == last_dev:
+            logger.info('Creating /mnt/imaging on device %s' % last_dev)
+            if run_as_sudo('mkdir /mnt/imaging') != 0 or run_as_sudo(
+                    'chown imaging-worker:imaging-worker /mnt/imaging') != 0:
+                logger.error('could not create /mnt/imaging')
+        elif run('ls -la %s' % last_dev) != 0 or run('ls -la /mnt') != 0:
             logger.error('failed to find %s or /mnt' % last_dev)
         else:
             if run_as_sudo_with_grep('mount', '/mnt') == 1:
